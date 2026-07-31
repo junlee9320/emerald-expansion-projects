@@ -2133,6 +2133,10 @@ extern const u8 gText_Cancel3[];
 extern const u8 gText_ExpShareOn[];
 extern const u8 gText_ExpShareOff[];
 
+// Eternal Repel
+extern const u8 gText_EternalRepelOn[];
+extern const u8 gText_EternalRepelOff[];
+
 // Move Relearner
 extern const u8 MoveRelearner_Text_LevelUpMoveLWR[];
 extern const u8 MoveRelearner_Text_EggMoveLWR[];

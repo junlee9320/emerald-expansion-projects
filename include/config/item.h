@@ -31,6 +31,11 @@
 #define I_EXP_SHARE_FLAG        0           // If this flag is set, every Pokémon in the party will gain experience, regardless if they participated in the battle or not.
 #define I_EXP_SHARE_ITEM        GEN_5       // In Gen6+, the Exp. Share was changed from a held item to a Key item that toggles the effect described above.
 
+ // Eternal Repel config
+// To use this feature, replace the 0 with the flag ID you're assigning it to.
+// Eg: Replace with FLAG_UNUSED_0x264 so you can use that flag to toggle the feature.
+#define I_ETERNAL_REPEL_FLAG    FLAG_UNUSED_0x020           // If this flag is set, the Eternal Repel key item's effect is active: wild encounters below the player's lead party level are repelled indefinitely.
+
 // Repel/Lure config
 // These two settings are both independent and complementary.
 #define VAR_LAST_REPEL_LURE_USED    0       // If this var has been assigned, last Repel/Lure used will be saved and the player will get prompted with the vanilla repel YES/NO option, unless I_REPEL_LURE_MENU is set to TRUE.

@@ -43,6 +43,9 @@
 #include "task.h"
 #include "text.h"
 #include "vs_seeker.h"
+
+#include "wild_encounter.h"
+
 #include "constants/event_bg.h"
 #include "constants/event_objects.h"
 #include "constants/item_effects.h"
@@ -270,6 +273,40 @@ void ItemUseOutOfBattle_ExpShare(u8 taskId)
 #else
     DisplayDadsAdviceCannotUseItemMessage(taskId, gTasks[taskId].tUsingRegisteredKeyItem);
 #endif
+}
+
+FEATURE_FLAG_ASSERT(I_ETERNAL_REPEL_FLAG, YouNeedToSetTheEternalRepelFlagToAnUnusedFlag);
+
+void ItemUseOutOfBattle_EternalRepel(u8 taskId)
+{
+    if (I_ETERNAL_REPEL_FLAG <= TEMP_FLAGS_END)
+    {
+        // Feature flag hasn't been configured; treat it as unusable rather than silently doing nothing.
+        DisplayDadsAdviceCannotUseItemMessage(taskId, gTasks[taskId].tUsingRegisteredKeyItem);
+        return;
+    }
+
+    if (IsEternalRepelEnabled())
+    {
+        // Turning it off: clear any active repel effect immediately.
+        VarSet(VAR_REPEL_STEP_COUNT, 0);
+        PlaySE(SE_PC_OFF);
+        if (!gTasks[taskId].data[2]) // to account for pressing select in the overworld
+            DisplayItemMessageOnField(taskId, gText_EternalRepelOff, Task_CloseCantUseKeyItemMessage);
+        else
+            DisplayItemMessage(taskId, FONT_NORMAL, gText_EternalRepelOff, CloseItemMessage);
+    }
+    else
+    {
+        // Turning it on: activate the repel effect immediately, without waiting a step.
+        VarSet(VAR_REPEL_STEP_COUNT, REPEL_LURE_MASK - 1);
+        PlaySE(SE_REPEL);
+        if (!gTasks[taskId].data[2]) // to account for pressing select in the overworld
+            DisplayItemMessageOnField(taskId, gText_EternalRepelOn, Task_CloseCantUseKeyItemMessage);
+        else
+            DisplayItemMessage(taskId, FONT_NORMAL, gText_EternalRepelOn, CloseItemMessage);
+    }
+    FlagToggle(I_ETERNAL_REPEL_FLAG);
 }
 
 void ItemUseOutOfBattle_Bike(u8 taskId)
@@ -913,6 +950,12 @@ void ItemUseOutOfBattle_PPUp(u8 taskId)
 void ItemUseOutOfBattle_RareCandy(u8 taskId)
 {
     gItemUseCB = ItemUseCB_RareCandy;
+    SetUpItemUseCallback(taskId);
+}
+
+void ItemUseOutOfBattle_EternalCandy(u8 taskId)
+{
+    gItemUseCB = ItemUseCB_EternalCandy;
     SetUpItemUseCallback(taskId);
 }
 

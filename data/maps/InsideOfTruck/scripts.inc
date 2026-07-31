@@ -16,6 +16,8 @@ InsideOfTruck_OnResume:
 InsideOfTruck_EventScript_SetIntroFlags::
 	lockall
 	setflag FLAG_HIDE_MAP_NAME_POPUP
+	additem ITEM_ETERNAL_CANDY
+	additem ITEM_ETERNAL_REPEL
 	checkplayergender
 	goto_if_eq VAR_RESULT, MALE, InsideOfTruck_EventScript_SetIntroFlagsMale
 	goto_if_eq VAR_RESULT, FEMALE, InsideOfTruck_EventScript_SetIntroFlagsFemale

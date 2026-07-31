@@ -1009,6 +1009,14 @@ u16 GetLocalWaterMon(void)
     return SPECIES_NONE;
 }
 
+bool8 IsEternalRepelEnabled(void)
+{
+    if (I_ETERNAL_REPEL_FLAG <= TEMP_FLAGS_END)
+        return FALSE;
+
+    return FlagGet(I_ETERNAL_REPEL_FLAG);
+}
+
 bool8 UpdateRepelCounter(void)
 {
     u16 repelLureVar = VarGet(VAR_REPEL_STEP_COUNT);
@@ -1019,6 +1027,13 @@ bool8 UpdateRepelCounter(void)
         return FALSE;
     if (InUnionRoom() == TRUE)
         return FALSE;
+
+    if (IsEternalRepelEnabled())
+    {
+        // Keep the repel counter topped up every step so it can never run out.
+        VarSet(VAR_REPEL_STEP_COUNT, REPEL_LURE_MASK - 1);
+        return FALSE;
+    }
 
     if (steps != 0)
     {
@@ -1041,7 +1056,6 @@ bool8 UpdateRepelCounter(void)
                 return TRUE;
             }
         }
-
     }
     return FALSE;
 }

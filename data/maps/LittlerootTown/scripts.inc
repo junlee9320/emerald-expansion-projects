@@ -155,7 +155,14 @@ LittlerootTown_EventScript_GoInsideWithMom::
 	applymovement LOCALID_PLAYER, LittlerootTown_Movement_PlayerEnterHouse
 	waitmovement 0
 	setflag FLAG_HIDE_LITTLEROOT_TOWN_MOM_OUTSIDE
-	setvar VAR_LITTLEROOT_INTRO_STATE, 3
+	setvar VAR_LITTLEROOT_INTRO_STATE, 7
+	setvar VAR_LITTLEROOT_HOUSES_STATE_MAY, 5
+	setvar VAR_LITTLEROOT_HOUSES_STATE_BRENDAN, 5
+	setvar VAR_LITTLEROOT_TOWN_STATE, 1
+	setflag FLAG_SET_WALL_CLOCK
+	setflag FLAG_HIDE_LITTLEROOT_TOWN_PLAYERS_HOUSE_VIGOROTH_1
+	setflag FLAG_HIDE_LITTLEROOT_TOWN_PLAYERS_HOUSE_VIGOROTH_2
+	special InitTimeBasedEvents
 	hideplayer
 	closedoor VAR_0x8004, VAR_0x8005
 	waitdooranim
@@ -373,18 +380,7 @@ LittlerootTown_Movement_TwinReturnRight:
 	step_end
 
 LittlerootTown_EventScript_GoSaveBirchTrigger::
-	lockall
-	applymovement LOCALID_LITTLEROOT_TWIN, Common_Movement_WalkInPlaceFasterRight
-	waitmovement 0
-	applymovement LOCALID_PLAYER, Common_Movement_WalkInPlaceFasterLeft
-	waitmovement 0
-	special GetPlayerBigGuyGirlString
-	msgbox LittlerootTown_Text_CanYouGoSeeWhatsHappening, MSGBOX_DEFAULT
-	closemessage
-	applymovement LOCALID_LITTLEROOT_TWIN, Common_Movement_FaceOriginalDirection
-	waitmovement 0
 	setvar VAR_LITTLEROOT_TOWN_STATE, 2
-	releaseall
 	end
 
 LittlerootTown_EventScript_TownSign::

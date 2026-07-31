@@ -15832,6 +15832,43 @@ const struct ItemInfo gItemsInfo[] =
         .iconPic = gItemIcon_PokeshiDoll,
         .iconPalette = gItemIconPalette_PokeshiDoll,
     },
+
+    [ITEM_ETERNAL_CANDY] =
+    {
+        .name = ITEM_NAME("Eternal Candy"),
+        .price = 0,
+        .importance = 1, // Cannot be sold, tossed, or flung
+        .description = COMPOUND_STRING(
+            "A mystical candy\n"
+            "that never runs\n"
+            "out. Raises level\n"
+            "by one, up to the\n"
+            "level cap."),
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_PARTY_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_EternalCandy,
+        .effect = gItemEffect_RareCandy,
+        .iconPic = gItemIcon_RareCandy,
+        .iconPalette = gItemIconPalette_RareCandy,
+    },
+
+    [ITEM_ETERNAL_REPEL] =
+    {
+        .name = ITEM_NAME("Eternal Repel"),
+        .price = 0,
+        .importance = 1, // Cannot be sold, tossed, or flung
+        .description = COMPOUND_STRING(
+            "A charm that\n"
+            "repels weak wild\n"
+            "Pokémon forever.\n"
+            "Toggle it on or\n"
+            "off at will."),
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_FIELD,
+        .fieldUseFunc = ItemUseOutOfBattle_EternalRepel,
+        .iconPic = gItemIcon_Repel,
+        .iconPalette = gItemIconPalette_Repel,
+    },
 };
 
 #undef ITEM_NAME

@@ -5688,7 +5688,8 @@ static void CB2_ReturnToPartyMenuWhileLearningMove(void)
 {
     if (sFinalLevel != 0)
         SetMonData(&gParties[B_TRAINER_PLAYER][gPartyMenu.slotId], MON_DATA_LEVEL, &sFinalLevel); // to avoid displaying incorrect level
-    if (GetItemFieldFunc(gSpecialVar_ItemId) == ItemUseOutOfBattle_RareCandy && gPartyMenu.menuType == PARTY_MENU_TYPE_FIELD && CheckBagHasItem(gSpecialVar_ItemId, 1))
+    if ((GetItemFieldFunc(gSpecialVar_ItemId) == ItemUseOutOfBattle_RareCandy || GetItemFieldFunc(gSpecialVar_ItemId) == ItemUseOutOfBattle_EternalCandy)
+        && gPartyMenu.menuType == PARTY_MENU_TYPE_FIELD && CheckBagHasItem(gSpecialVar_ItemId, 1))
         InitPartyMenu(PARTY_MENU_TYPE_FIELD, PARTY_LAYOUT_SINGLE, PARTY_ACTION_USE_ITEM, TRUE, PARTY_MSG_NONE, Task_ReturnToPartyMenuWhileLearningMove, gPartyMenu.exitCallback);
     else
         InitPartyMenu(PARTY_MENU_TYPE_FIELD, PARTY_LAYOUT_SINGLE, PARTY_ACTION_CHOOSE_MON, TRUE, PARTY_MSG_NONE, Task_ReturnToPartyMenuWhileLearningMove, gPartyMenu.exitCallback);
@@ -5907,6 +5908,83 @@ void ItemUseCB_RareCandy(u8 taskId, TaskFunc task)
     }
 }
 
+void ItemUseCB_EternalCandy(u8 taskId, TaskFunc task)
+{
+    struct Pokemon *mon = &gParties[B_TRAINER_PLAYER][gPartyMenu.slotId];
+    struct PartyMenuInternal *ptr = sPartyMenuInternal;
+    s16 *arrayPtr = ptr->data;
+    u16 *itemPtr = &gSpecialVar_ItemId;
+    bool8 cannotUseEffect;
+
+    sInitialLevel = GetMonData(mon, MON_DATA_LEVEL);
+    // Unlike regular Rare Candy, Eternal Candy always respects the level cap,
+    // regardless of the B_RARE_CANDY_CAP setting.
+    if (sInitialLevel < GetCurrentLevelCap())
+    {
+        BufferMonStatsToTaskData(mon, arrayPtr);
+        cannotUseEffect = ExecuteTableBasedItemEffect(mon, *itemPtr, gPartyMenu.slotId, 0);
+        BufferMonStatsToTaskData(mon, &ptr->data[NUM_STATS]);
+    }
+    else
+    {
+        cannotUseEffect = TRUE;
+    }
+    PlaySE(SE_SELECT);
+    if (cannotUseEffect)
+    {
+        enum Species targetSpecies = SPECIES_NONE;
+        bool32 canStopEvo = TRUE;
+
+        // Resets values to 0 so other means of teaching moves doesn't overwrite levels
+        sInitialLevel = 0;
+        sFinalLevel = 0;
+
+        targetSpecies = GetEvolutionTargetSpecies(mon, EVO_MODE_NORMAL, ITEM_NONE, NULL, &canStopEvo, CHECK_EVO);
+
+        if (targetSpecies != SPECIES_NONE)
+        {
+            GetEvolutionTargetSpecies(mon, EVO_MODE_NORMAL, ITEM_NONE, NULL, &canStopEvo, DO_EVO);
+            // Eternal Candy is never consumed, so no RemoveBagItem call here.
+            FreePartyPointers();
+            gCB2_AfterEvolution = gPartyMenu.exitCallback;
+            BeginEvolutionScene(mon, targetSpecies, canStopEvo, gPartyMenu.slotId);
+            DestroyTask(taskId);
+        }
+        else
+        {
+            gPartyMenuUseExitCallback = FALSE;
+            DisplayPartyMenuMessage(gText_WontHaveEffect, TRUE);
+            ScheduleBgCopyTilemapToVram(2);
+            gTasks[taskId].func = task;
+        }
+    }
+    else
+    {
+        sFinalLevel = GetMonData(mon, MON_DATA_LEVEL);
+        gPartyMenuUseExitCallback = TRUE;
+        UpdateMonDisplayInfoAfterRareCandy(gPartyMenu.slotId, mon);
+        // Eternal Candy is never consumed, so no RemoveBagItem call here.
+        GetMonNickname(mon, gStringVar1);
+        if (sFinalLevel > sInitialLevel)
+        {
+            PlayFanfareByFanfareNum(FANFARE_LEVEL_UP);
+            ConvertIntToDecimalStringN(gStringVar2, sFinalLevel, STR_CONV_MODE_LEFT_ALIGN, 3);
+            StringExpandPlaceholders(gStringVar4, gText_PkmnElevatedToLvVar2);
+            DisplayPartyMenuMessage(gStringVar4, TRUE);
+            ScheduleBgCopyTilemapToVram(2);
+            gTasks[taskId].func = Task_DisplayLevelUpStatsPg1;
+        }
+        else
+        {
+            PlaySE(SE_USE_ITEM);
+            gPartyMenuUseExitCallback = FALSE;
+            DisplayPartyMenuMessage(gText_WontHaveEffect, FALSE);
+            ScheduleBgCopyTilemapToVram(2);
+            gTasks[taskId].func = task;
+        }
+    }
+}
+
 static void UpdateMonDisplayInfoAfterRareCandy(u8 slot, struct Pokemon *mon)
 {
     SetPartyMonAilmentGfx(mon, &sPartyMenuBoxes[slot]);
@@ -6028,6 +6106,12 @@ static void CB2_ReturnToPartyMenuUsingRareCandy(void)
     SetMainCallback2(CB2_ShowPartyMenuForItemUse);
 }
 
+static void CB2_ReturnToPartyMenuUsingEternalCandy(void)
+{
+    gItemUseCB = ItemUseCB_EternalCandy;
+    SetMainCallback2(CB2_ShowPartyMenuForItemUse);
+}
+
 static void PartyMenuTryEvolution(u8 taskId)
 {
     struct Pokemon *mon = &gParties[B_TRAINER_PLAYER][gPartyMenu.slotId];
@@ -6046,6 +6130,8 @@ static void PartyMenuTryEvolution(u8 taskId)
         FreePartyPointers();
         if (GetItemFieldFunc(gSpecialVar_ItemId) == ItemUseOutOfBattle_RareCandy && gPartyMenu.menuType == PARTY_MENU_TYPE_FIELD && CheckBagHasItem(gSpecialVar_ItemId, 1))
             gCB2_AfterEvolution = CB2_ReturnToPartyMenuUsingRareCandy;
+        else if (GetItemFieldFunc(gSpecialVar_ItemId) == ItemUseOutOfBattle_EternalCandy && gPartyMenu.menuType == PARTY_MENU_TYPE_FIELD)
+            gCB2_AfterEvolution = CB2_ReturnToPartyMenuUsingEternalCandy;
         else
             gCB2_AfterEvolution = gPartyMenu.exitCallback;
         BeginEvolutionScene(mon, targetSpecies, canStopEvo, gPartyMenu.slotId);

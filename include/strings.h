@@ -2137,6 +2137,9 @@ extern const u8 gText_ExpShareOff[];
 extern const u8 gText_EternalRepelOn[];
 extern const u8 gText_EternalRepelOff[];
 
+// Portable Healer
+extern const u8 gText_PortableHealerUsed[];
+
 // Move Relearner
 extern const u8 MoveRelearner_Text_LevelUpMoveLWR[];
 extern const u8 MoveRelearner_Text_EggMoveLWR[];

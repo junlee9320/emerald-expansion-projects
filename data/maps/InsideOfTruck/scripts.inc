@@ -18,6 +18,9 @@ InsideOfTruck_EventScript_SetIntroFlags::
 	setflag FLAG_HIDE_MAP_NAME_POPUP
 	additem ITEM_ETERNAL_CANDY
 	additem ITEM_ETERNAL_REPEL
+	additem ITEM_PORTABLE_HEALER
+	additem ITEM_OLD_ROD
+	setflag FLAG_RECEIVED_OLD_ROD
 	setflag FLAG_RECEIVED_RUNNING_SHOES
 	setflag FLAG_SYS_B_DASH
 	checkplayergender

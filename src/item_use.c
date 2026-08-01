@@ -36,7 +36,10 @@
 #include "party_menu.h"
 #include "pokeblock.h"
 #include "pokemon.h"
+
 #include "script.h"
+#include "script_pokemon_util.h"
+
 #include "sound.h"
 #include "strings.h"
 #include "string_util.h"
@@ -307,6 +310,16 @@ void ItemUseOutOfBattle_EternalRepel(u8 taskId)
             DisplayItemMessage(taskId, FONT_NORMAL, gText_EternalRepelOn, CloseItemMessage);
     }
     FlagToggle(I_ETERNAL_REPEL_FLAG);
+}
+
+void ItemUseOutOfBattle_PortableHealer(u8 taskId)
+{
+    HealPlayerParty();
+    PlayFanfare(MUS_HEAL);
+    if (!gTasks[taskId].data[2]) // to account for pressing select in the overworld
+        DisplayItemMessageOnField(taskId, gText_PortableHealerUsed, Task_CloseCantUseKeyItemMessage);
+    else
+        DisplayItemMessage(taskId, FONT_NORMAL, gText_PortableHealerUsed, CloseItemMessage);
 }
 
 void ItemUseOutOfBattle_Bike(u8 taskId)

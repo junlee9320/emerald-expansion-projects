@@ -24,6 +24,7 @@ void ItemUseOutOfBattle_RareCandy(u8 taskId);
 
 void ItemUseOutOfBattle_EternalCandy(u8 taskId);
 void ItemUseOutOfBattle_EternalRepel(u8 taskId);
+void ItemUseOutOfBattle_PortableHealer(u8 taskId);
 
 void ItemUseOutOfBattle_DynamaxCandy(u8 taskId);
 void ItemUseOutOfBattle_TMHM(u8 taskId);

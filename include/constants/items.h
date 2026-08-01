@@ -1054,6 +1054,7 @@ enum __attribute__((packed)) Item
 
     ITEM_ETERNAL_CANDY = 874,
     ITEM_ETERNAL_REPEL = 875,
+    ITEM_PORTABLE_HEALER = 876,
 
     ITEMS_COUNT,
     ITEM_FIELD_ARROW = ITEMS_COUNT,

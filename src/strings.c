@@ -1170,6 +1170,7 @@ const u8 gText_ExpShareOff[] = _("The Exp. Share has been turned off.{PAUSE_UNTI
 
 const u8 gText_EternalRepelOn[] = _("The Eternal Repel has been turned on.{PAUSE_UNTIL_PRESS}");
 const u8 gText_EternalRepelOff[] = _("The Eternal Repel has been turned off.{PAUSE_UNTIL_PRESS}");
+const u8 gText_PortableHealerUsed[] = _("Your party was fully healed!{PAUSE_UNTIL_PRESS}");
 
 ALIGNED(4) const u8 gText_Ghost[] = _("GHOST");
 const u8 gText_Boulderbadge[] = _("BOULDERBADGE");

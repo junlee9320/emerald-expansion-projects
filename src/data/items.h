@@ -15869,6 +15869,24 @@ const struct ItemInfo gItemsInfo[] =
         .iconPic = gItemIcon_Repel,
         .iconPalette = gItemIconPalette_Repel,
     },
+
+    [ITEM_PORTABLE_HEALER] =
+    {
+        .name = ITEM_NAME("Portable Healer"),
+        .price = 0,
+        .importance = 1, // Cannot be sold, tossed, or flung
+        .description = COMPOUND_STRING(
+            "A compact device\n"
+            "that fully heals\n"
+            "your party, just\n"
+            "like a Pokémon\n"
+            "Center."),
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_FIELD,
+        .fieldUseFunc = ItemUseOutOfBattle_PortableHealer,
+        .iconPic = gItemIcon_LargePotion,
+        .iconPalette = gItemIconPalette_FullRestore,
+    },
 };
 
 #undef ITEM_NAME

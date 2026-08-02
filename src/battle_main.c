@@ -5635,6 +5635,13 @@ static void TryEvolvePokemon(void)
 {
     s32 i;
 
+    if (P_MANUAL_EVOLUTION_ONLY == TRUE)
+    {
+        gTriedEvolving = 0;
+        gBattleMainFunc = ReturnFromBattleToOverworld;
+        return;
+    }
+
     for (i = 0; i < PARTY_SIZE; i++)
     {
         if (!(gTriedEvolving & (1u << i)))

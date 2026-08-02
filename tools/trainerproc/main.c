@@ -78,6 +78,9 @@ struct Pokemon
     int friendship;
     int friendship_line;
 
+    int hp_percent;
+    int hp_percent_line;
+
     struct String nature;
     int nature_line;
 
@@ -1473,6 +1476,18 @@ static bool parse_trainer(struct Parser *p, const struct Parsed *parsed, struct 
                 if (!token_int(p, &value, &pokemon->friendship))
                     any_error = !show_parse_error(p);
             }
+
+            else if (is_literal_token(&key, "HP"))
+            {
+                if (pokemon->hp_percent_line)
+                    any_error = !set_show_parse_error(p, key.location, "duplicate 'HP'");
+                pokemon->hp_percent_line = value.location.line;
+                if (!token_int(p, &value, &pokemon->hp_percent))
+                    any_error = !show_parse_error(p);
+                else if (pokemon->hp_percent < 1 || pokemon->hp_percent > 100)
+                    any_error = !set_show_parse_error(p, value.location, "'HP' must be between 1 and 100");
+            }
+
             else if (is_literal_token(&key, "Nature"))
             {
                 if (pokemon->nature_line)
@@ -2082,6 +2097,12 @@ static void fprint_trainers(const char *output_path, FILE *f, struct Parsed *par
             {
                 fprintf(f, "#line %d\n", pokemon->friendship_line);
                 fprintf(f, "            .friendship = %d,\n", pokemon->friendship);
+            }
+
+            if (pokemon->hp_percent_line)
+            {
+                fprintf(f, "#line %d\n", pokemon->hp_percent_line);
+                fprintf(f, "            .hpPercent = %d,\n", pokemon->hp_percent);
             }
 
             if (pokemon->nature_line)

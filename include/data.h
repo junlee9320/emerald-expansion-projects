@@ -84,6 +84,7 @@ struct TrainerMon
     u8 dynamaxLevel:4;
     u8 padding2:4;
     u32 tags;
+    u8 hpPercent; // 0 = full HP (default). 1-99 = starting HP as a percentage of max HP. Ignored if 100+.
 };
 
 #define TRAINER_PARTY(partyArray) partyArray, .partySize = ARRAY_COUNT(partyArray)

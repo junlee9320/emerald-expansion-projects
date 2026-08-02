@@ -50,6 +50,9 @@ Optional fields for Pokemon:
           (Order does not matter)
     - Ball (Poke, Great, Master, Dive, etc.; defaults to Poke)
     - Happiness (Number between 1 and 255)
+
+    - HP (Number between 1 and 100 - percentage of max HP this Pokémon starts battle with. If not specified, starts at full HP)
+
     - Nature (Rash or NATURE_RASH, defaults to Hardy)
     - Shiny (Yes/No, defaults to No)
     - Dynamax Level (Number between 0 and 10, default 10, also sets "shouldDynamax" to True)
@@ -9516,6 +9519,7 @@ AI: Basic Trainer
 Treecko
 Level: 5
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+HP: 50
 
 === TRAINER_BRENDAN_ROUTE_110_MUDKIP ===
 Name: BRENDAN
@@ -9571,6 +9575,7 @@ AI: Check Bad Move / Try To Faint / Force Setup First Turn
 Torchic
 Level: 5
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+HP: 50
 
 === TRAINER_BRENDAN_ROUTE_110_TREECKO ===
 Name: BRENDAN
@@ -9626,6 +9631,7 @@ AI: Basic Trainer
 Mudkip
 Level: 5
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+HP: 50
 
 === TRAINER_BRENDAN_ROUTE_110_TORCHIC ===
 Name: BRENDAN
@@ -9681,6 +9687,7 @@ AI: Basic Trainer
 Treecko
 Level: 5
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+HP: 50
 
 === TRAINER_MAY_ROUTE_110_MUDKIP ===
 Name: MAY
@@ -9736,6 +9743,7 @@ AI: Basic Trainer
 Torchic
 Level: 5
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+HP: 50
 
 === TRAINER_MAY_ROUTE_110_TREECKO ===
 Name: MAY
@@ -9791,6 +9799,7 @@ AI: Basic Trainer
 Mudkip
 Level: 5
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+HP: 50
 
 === TRAINER_MAY_ROUTE_110_TORCHIC ===
 Name: MAY

@@ -1985,6 +1985,15 @@ u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer 
             }
             CalculateMonStats(&party[i]);
 
+            if (partyData[monIndex].hpPercent > 0 && partyData[monIndex].hpPercent < 100)
+            {
+                u32 maxHP = GetMonData(&party[i], MON_DATA_MAX_HP);
+                u32 startingHP = (maxHP * partyData[monIndex].hpPercent) / 100;
+                if (startingHP == 0)
+                    startingHP = 1; // Never start a trainer's mon fainted
+                SetMonData(&party[i], MON_DATA_HP, &startingHP);
+            }
+
             if (B_TRAINER_CLASS_POKE_BALLS >= GEN_7 && ball == -1)
             {
                 ball = gTrainerClasses[trainer->trainerClass].ball ?: BALL_POKE;

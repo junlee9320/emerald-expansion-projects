@@ -158,4 +158,23 @@
 // Configuration
 #define OW_AMBIENT_CRIES                OW_AMBIENT_CRIES_VANILLA // Selects how ambient cries are played, if at all. As in vanilla, no matter what is chosen, cries will not play if the player is not on a map with Land or Water encounter tables.
 
+
+// Field Moves (HMs)
+// If TRUE, field moves (Cut, Surf, Fly, etc.) can be used without any Pokémon in the party knowing the move.
+// Only the relevant badge (see IsFieldMoveUnlocked_* in field_move.c) is required. A configurable placeholder
+// Pokémon (below) performs the animation instead of a real party member.
+#define OW_FIELD_MOVES_NO_HM_REQUIRED   TRUE
+
+// Which species performs each field move's animation when no real party member knows it (only relevant if
+// OW_FIELD_MOVES_NO_HM_REQUIRED is TRUE). Fully independent per move - set each to whatever species you like.
+#define FIELD_MOVE_MON_CUT              SPECIES_MEWTWO
+#define FIELD_MOVE_MON_FLASH            SPECIES_MEWTWO
+#define FIELD_MOVE_MON_ROCK_SMASH       SPECIES_MEWTWO
+#define FIELD_MOVE_MON_STRENGTH         SPECIES_MEWTWO
+#define FIELD_MOVE_MON_SURF             SPECIES_MEWTWO
+#define FIELD_MOVE_MON_WATERFALL        SPECIES_MEWTWO
+#define FIELD_MOVE_MON_DIVE             SPECIES_MEWTWO
+#define FIELD_MOVE_MON_ROCK_CLIMB       SPECIES_MEWTWO
+#define FIELD_MOVE_MON_FLY              SPECIES_MEWTWO
+
 #endif // GUARD_CONFIG_OVERWORLD_H

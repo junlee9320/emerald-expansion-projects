@@ -2153,8 +2153,13 @@ bool8 ScrCmd_bufferpartymonnick(struct ScriptContext *ctx)
 
     Script_RequestEffects(SCREFF_V1);
 
-    GetMonData(&gParties[B_TRAINER_PLAYER][partyIndex], MON_DATA_NICKNAME, sScriptStringVars[stringVarIndex]);
-    StringGet_Nickname(sScriptStringVars[stringVarIndex]);
+    if (partyIndex == FIELD_MOVE_PLACEHOLDER_SLOT)
+        StringCopy(sScriptStringVars[stringVarIndex], GetSpeciesName(gFieldMovePlaceholderSpecies));
+    else
+    {
+        GetMonData(&gParties[B_TRAINER_PLAYER][partyIndex], MON_DATA_NICKNAME, sScriptStringVars[stringVarIndex]);
+        StringGet_Nickname(sScriptStringVars[stringVarIndex]);
+    }
     return FALSE;
 }
 
@@ -2327,6 +2332,30 @@ bool8 ScrCmd_checkfieldmove(struct ScriptContext *ctx)
             gSpecialVar_Result = i;
             gSpecialVar_0x8004 = species;
             break;
+        }
+    }
+
+    if (gSpecialVar_Result == PARTY_SIZE && OW_FIELD_MOVES_NO_HM_REQUIRED == TRUE)
+    {
+        enum Species placeholderSpecies = SPECIES_NONE;
+        switch (fieldMove)
+        {
+        case FIELD_MOVE_CUT:         placeholderSpecies = FIELD_MOVE_MON_CUT;        break;
+        case FIELD_MOVE_FLASH:       placeholderSpecies = FIELD_MOVE_MON_FLASH;      break;
+        case FIELD_MOVE_ROCK_SMASH:  placeholderSpecies = FIELD_MOVE_MON_ROCK_SMASH; break;
+        case FIELD_MOVE_STRENGTH:    placeholderSpecies = FIELD_MOVE_MON_STRENGTH;   break;
+        case FIELD_MOVE_SURF:        placeholderSpecies = FIELD_MOVE_MON_SURF;       break;
+        case FIELD_MOVE_WATERFALL:   placeholderSpecies = FIELD_MOVE_MON_WATERFALL;  break;
+        case FIELD_MOVE_DIVE:        placeholderSpecies = FIELD_MOVE_MON_DIVE;       break;
+        case FIELD_MOVE_ROCK_CLIMB:  placeholderSpecies = FIELD_MOVE_MON_ROCK_CLIMB; break;
+        default:                     placeholderSpecies = SPECIES_NONE;              break;
+        }
+
+        if (placeholderSpecies != SPECIES_NONE)
+        {
+            gFieldMovePlaceholderSpecies = placeholderSpecies;
+            gSpecialVar_Result = FIELD_MOVE_PLACEHOLDER_SLOT;
+            gSpecialVar_0x8004 = placeholderSpecies;
         }
     }
 

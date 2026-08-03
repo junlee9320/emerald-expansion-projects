@@ -8,6 +8,13 @@ extern const struct SpriteTemplate gNewGameBirchObjectTemplate;
 extern const struct OamData gNewGameBirchOamAttributes;
 
 extern s32 gFieldEffectArguments[8];
+extern u16 gFieldMovePlaceholderSpecies;
+
+// Sentinel "party index" used in place of a real party slot when a field move is used via
+// OW_FIELD_MOVES_NO_HM_REQUIRED without any Pokémon actually knowing the move. Must not collide
+// with valid party slots (0 to PARTY_SIZE-1) or the "not found" sentinel (PARTY_SIZE).
+#define FIELD_MOVE_PLACEHOLDER_SLOT 0xFE
+
 extern void (*gPostMenuFieldCallback)(void);
 extern bool8 (*gFieldCallback2)(void);
 

@@ -30,7 +30,15 @@ bool32 SetUpFieldMove_Strength(void)
 
 static void FieldCallback_Strength(void)
 {
-    gFieldEffectArguments[0] = GetCursorSelectionMonId();
+    if (OW_FIELD_MOVES_NO_HM_REQUIRED == TRUE)
+    {
+        gFieldMovePlaceholderSpecies = FIELD_MOVE_MON_STRENGTH;
+        gFieldEffectArguments[0] = FIELD_MOVE_PLACEHOLDER_SLOT;
+    }
+    else
+    {
+        gFieldEffectArguments[0] = GetCursorSelectionMonId();
+    }
     ScriptContext_SetupScript(EventScript_UseStrength);
 }
 

@@ -23,6 +23,7 @@ InsideOfTruck_EventScript_SetIntroFlags::
 	setflag FLAG_RECEIVED_OLD_ROD
 	setflag FLAG_RECEIVED_RUNNING_SHOES
 	setflag FLAG_SYS_B_DASH
+	setvar VAR_PETALBURG_CITY_STATE, 3
 	checkplayergender
 	goto_if_eq VAR_RESULT, MALE, InsideOfTruck_EventScript_SetIntroFlagsMale
 	goto_if_eq VAR_RESULT, FEMALE, InsideOfTruck_EventScript_SetIntroFlagsFemale

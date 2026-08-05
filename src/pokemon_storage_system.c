@@ -4130,34 +4130,45 @@ static void SetUpHidePartyMenu(void)
 
 static bool8 HidePartyMenu(void)
 {
-    if (sStorage->partyMenuMoveTimer != 20)
+    u8 i;
+    bool8 result = TRUE;
+
+    for (i = 0; i < 4; i++) // run up to 4 steps per frame for 4x speed
     {
-        sStorage->partyMenuY--;
-        TilemapUtil_Move(TILEMAPID_PARTY_MENU, 3, -1);
-        TilemapUtil_Update(TILEMAPID_PARTY_MENU);
-        FillBgTilemapBufferRect_Palette0(1, 0x100, 10, sStorage->partyMenuY, 12, 1);
-        MovePartySprites(-8);
-        if (++sStorage->partyMenuMoveTimer != 20)
+        if (sStorage->partyMenuMoveTimer != 20)
         {
-            ScheduleBgCopyTilemapToVram(1);
-            return TRUE;
+            sStorage->partyMenuY--;
+            TilemapUtil_Move(TILEMAPID_PARTY_MENU, 3, -1);
+            TilemapUtil_Update(TILEMAPID_PARTY_MENU);
+            FillBgTilemapBufferRect_Palette0(1, 0x100, 10, sStorage->partyMenuY, 12, 1);
+            MovePartySprites(-8);
+            if (++sStorage->partyMenuMoveTimer != 20)
+            {
+                ScheduleBgCopyTilemapToVram(1);
+            }
+            else
+            {
+                sInPartyMenu = FALSE;
+                DestroyAllPartyMonIcons();
+                CompactPartySlots();
+
+                // The close box button gets partially covered by
+                // the party menu, restore it
+                TilemapUtil_SetRect(TILEMAPID_CLOSE_BUTTON, 0, 0, 9, 2);
+                TilemapUtil_Update(TILEMAPID_CLOSE_BUTTON);
+                ScheduleBgCopyTilemapToVram(1);
+                result = FALSE;
+                break;
+            }
         }
         else
         {
-            sInPartyMenu = FALSE;
-            DestroyAllPartyMonIcons();
-            CompactPartySlots();
-
-            // The close box button gets partially covered by
-            // the party menu, restore it
-            TilemapUtil_SetRect(TILEMAPID_CLOSE_BUTTON, 0, 0, 9, 2);
-            TilemapUtil_Update(TILEMAPID_CLOSE_BUTTON);
-            ScheduleBgCopyTilemapToVram(1);
-            return FALSE;
+            result = FALSE;
+            break;
         }
     }
 
-    return FALSE;
+    return result;
 }
 
 static void UpdateCloseBoxButtonTilemap(bool8 normal)
@@ -4253,27 +4264,36 @@ static void SetUpDoShowPartyMenu(void)
 
 static bool8 DoShowPartyMenu(void)
 {
-    switch (sStorage->showPartyMenuState)
+    bool8 result = TRUE;
+    u8 i;
+
+    for (i = 0; i < 4; i++) // run up to 4 steps per frame for 4x speed
     {
-    case 0:
-        if (!ShowPartyMenu())
+        switch (sStorage->showPartyMenuState)
         {
-            SetCursorInParty();
-            sStorage->showPartyMenuState++;
+        case 0:
+            if (!ShowPartyMenu())
+            {
+                SetCursorInParty();
+                sStorage->showPartyMenuState++;
+            }
+            break;
+        case 1:
+            if (!UpdateCursorPos())
+            {
+                if (sStorage->setMosaic)
+                    StartDisplayMonMosaicEffect();
+                sStorage->showPartyMenuState++;
+            }
+            break;
+        case 2:
+            result = FALSE;
+            break;
         }
-        break;
-    case 1:
-        if (!UpdateCursorPos())
-        {
-            if (sStorage->setMosaic)
-                StartDisplayMonMosaicEffect();
-            sStorage->showPartyMenuState++;
-        }
-        break;
-    case 2:
-        return FALSE;
+        if (!result)
+            break;
     }
-    return TRUE;
+    return result;
 }
 
 static void UpdateBoxToSendMons(void)
@@ -6024,9 +6044,9 @@ static void InitCursorMove(void)
     int yDistance, xDistance;
 
     if (sStorage->cursorVerticalWrap != 0 || sStorage->cursorHorizontalWrap != 0)
-        sStorage->cursorMoveSteps = 12;
+        sStorage->cursorMoveSteps = 4;
     else
-        sStorage->cursorMoveSteps = 6;
+        sStorage->cursorMoveSteps = 2;
 
     if (sStorage->cursorFlipTimer)
         sStorage->cursorFlipTimer = sStorage->cursorMoveSteps >> 1;
@@ -6233,7 +6253,16 @@ static void InitMultiMonPlaceChange(bool8 up)
 
 static bool8 DoMonPlaceChange(void)
 {
-    return sStorage->monPlaceChangeFunc();
+    bool8 result = TRUE;
+    u8 i;
+
+    for (i = 0; i < 4; i++) // run up to 4 steps per frame for 4x speed
+    {
+        result = sStorage->monPlaceChangeFunc();
+        if (!result)
+            break; // finished - don't call again this frame
+    }
+    return result;
 }
 
 static bool8 MonPlaceChange_Grab(void)

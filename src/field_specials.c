@@ -1100,7 +1100,7 @@ static void PCTurnOnEffect(struct Task *task)
     enum Direction playerDirection;
     s8 dx = 0;
     s8 dy = 0;
-    if (task->tTimer == 6)
+    if (task->tTimer == 1)
     {
         task->tTimer = 0;
 

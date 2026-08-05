@@ -1450,17 +1450,26 @@ static void Task_SwitchBagPocket(u8 taskId)
     switch (tPocketSwitchState)
     {
     case 0:
-        DrawItemListBgRow(tPocketSwitchTimer);
-        if (!(++tPocketSwitchTimer & 1))
+    {
+        u8 i;
+        for (i = 0; i < 2; i++) // process 2 rows per frame instead of 1, halving the transition time
         {
-            if (tPocketSwitchDir == MENU_CURSOR_DELTA_RIGHT)
-                CopyPocketNameToWindow((u8)(tPocketSwitchTimer >> 1));
-            else
-                CopyPocketNameToWindow((u8)(8 - (tPocketSwitchTimer >> 1)));
+            DrawItemListBgRow(tPocketSwitchTimer);
+            if (!(++tPocketSwitchTimer & 1))
+            {
+                if (tPocketSwitchDir == MENU_CURSOR_DELTA_RIGHT)
+                    CopyPocketNameToWindow((u8)(tPocketSwitchTimer >> 1));
+                else
+                    CopyPocketNameToWindow((u8)(8 - (tPocketSwitchTimer >> 1)));
+            }
+            if (tPocketSwitchTimer == 16)
+            {
+                tPocketSwitchState++;
+                break;
+            }
         }
-        if (tPocketSwitchTimer == 16)
-            tPocketSwitchState++;
         break;
+    }
     case 1:
         ChangeBagPocketId(&gBagPosition.pocket, tPocketSwitchDir);
         LoadBagItemListBuffers(gBagPosition.pocket);

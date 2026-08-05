@@ -3336,58 +3336,68 @@ static void Task_SlideSelectedSlotsOffscreen(u8 taskId)
 {
     s16 *data = gTasks[taskId].data;
     u16 slidingSlotPositions[2];
+    u8 i;
 
-    SlidePartyMenuBoxOneStep(taskId);
-    SlidePartyMenuBoxSpritesOneStep(taskId);
-    tSlot1Offset += tSlot1SlideDir;
-    tSlot2Offset += tSlot2SlideDir;
-    slidingSlotPositions[0] = tSlot1Left + tSlot1Offset;
-    slidingSlotPositions[1] = tSlot2Left + tSlot2Offset;
-
-    // Both slots have slid offscreen
-    if (slidingSlotPositions[0] > 33 && slidingSlotPositions[1] > 33)
+    for (i = 0; i < 4; i++) // run the step twice per frame for 2x speed, keeping the 1-tile-per-step precision
     {
-        tSlot1SlideDir *= -1;
-        tSlot2SlideDir *= -1;
-        SwitchPartyMon();
-        DisplayPartyPokemonData(gPartyMenu.slotId);
-        DisplayPartyPokemonData(gPartyMenu.slotId2);
-        PutWindowTilemap(sPartyMenuBoxes[gPartyMenu.slotId].windowId);
-        PutWindowTilemap(sPartyMenuBoxes[gPartyMenu.slotId2].windowId);
-        CopyToBufferFromBgTilemap(0, sSlot1TilemapBuffer, tSlot1Left, tSlot1Top, tSlot1Width, tSlot1Height);
-        CopyToBufferFromBgTilemap(0, sSlot2TilemapBuffer, tSlot2Left, tSlot2Top, tSlot2Width, tSlot2Height);
-        ClearWindowTilemap(sPartyMenuBoxes[gPartyMenu.slotId].windowId);
-        ClearWindowTilemap(sPartyMenuBoxes[gPartyMenu.slotId2].windowId);
-        gTasks[taskId].func = Task_SlideSelectedSlotsOnscreen;
+        SlidePartyMenuBoxOneStep(taskId);
+        SlidePartyMenuBoxSpritesOneStep(taskId);
+        tSlot1Offset += tSlot1SlideDir;
+        tSlot2Offset += tSlot2SlideDir;
+        slidingSlotPositions[0] = tSlot1Left + tSlot1Offset;
+        slidingSlotPositions[1] = tSlot2Left + tSlot2Offset;
+
+        // Both slots have slid offscreen
+        if (slidingSlotPositions[0] > 33 && slidingSlotPositions[1] > 33)
+        {
+            tSlot1SlideDir *= -1;
+            tSlot2SlideDir *= -1;
+            SwitchPartyMon();
+            DisplayPartyPokemonData(gPartyMenu.slotId);
+            DisplayPartyPokemonData(gPartyMenu.slotId2);
+            PutWindowTilemap(sPartyMenuBoxes[gPartyMenu.slotId].windowId);
+            PutWindowTilemap(sPartyMenuBoxes[gPartyMenu.slotId2].windowId);
+            CopyToBufferFromBgTilemap(0, sSlot1TilemapBuffer, tSlot1Left, tSlot1Top, tSlot1Width, tSlot1Height);
+            CopyToBufferFromBgTilemap(0, sSlot2TilemapBuffer, tSlot2Left, tSlot2Top, tSlot2Width, tSlot2Height);
+            ClearWindowTilemap(sPartyMenuBoxes[gPartyMenu.slotId].windowId);
+            ClearWindowTilemap(sPartyMenuBoxes[gPartyMenu.slotId2].windowId);
+            gTasks[taskId].func = Task_SlideSelectedSlotsOnscreen;
+            break;
+        }
     }
 }
 
 static void Task_SlideSelectedSlotsOnscreen(u8 taskId)
 {
     s16 *data = gTasks[taskId].data;
+    u8 i;
 
-    SlidePartyMenuBoxOneStep(taskId);
-    SlidePartyMenuBoxSpritesOneStep(taskId);
+    for (i = 0; i < 4; i++) // run the step twice per frame for 2x speed, keeping the 1-tile-per-step precision
+    {
+        SlidePartyMenuBoxOneStep(taskId);
+        SlidePartyMenuBoxSpritesOneStep(taskId);
 
-    // Both slots have slid back onscreen
-    if (tSlot1SlideDir == 0 && tSlot2SlideDir == 0)
-    {
-        PutWindowTilemap(sPartyMenuBoxes[gPartyMenu.slotId].windowId);
-        PutWindowTilemap(sPartyMenuBoxes[gPartyMenu.slotId2].windowId);
-        ScheduleBgCopyTilemapToVram(0);
-        Free(sSlot1TilemapBuffer);
-        Free(sSlot2TilemapBuffer);
-        FinishTwoMonAction(taskId);
-    }
-    // Continue sliding
-    else
-    {
-        tSlot1Offset += tSlot1SlideDir;
-        tSlot2Offset += tSlot2SlideDir;
-        if (tSlot1Offset == 0)
-            tSlot1SlideDir = 0;
-        if (tSlot2Offset == 0)
-            tSlot2SlideDir = 0;
+        // Both slots have slid back onscreen
+        if (tSlot1SlideDir == 0 && tSlot2SlideDir == 0)
+        {
+            PutWindowTilemap(sPartyMenuBoxes[gPartyMenu.slotId].windowId);
+            PutWindowTilemap(sPartyMenuBoxes[gPartyMenu.slotId2].windowId);
+            ScheduleBgCopyTilemapToVram(0);
+            Free(sSlot1TilemapBuffer);
+            Free(sSlot2TilemapBuffer);
+            FinishTwoMonAction(taskId);
+            break;
+        }
+        // Continue sliding
+        else
+        {
+            tSlot1Offset += tSlot1SlideDir;
+            tSlot2Offset += tSlot2SlideDir;
+            if (tSlot1Offset == 0)
+                tSlot1SlideDir = 0;
+            if (tSlot2Offset == 0)
+                tSlot2SlideDir = 0;
+        }
     }
 }
 

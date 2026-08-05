@@ -2226,8 +2226,8 @@ static void PssScrollRight(u8 taskId) // Scroll right
         ShowBg(1);
         ShowBg(2);
     }
-    ChangeBgX(data[1], 0x2000, BG_COORD_ADD);
-    data[0] += 32;
+    ChangeBgX(data[1], 0x4000, BG_COORD_ADD);
+    data[0] += 64;
     if (data[0] > 0xFF)
         gTasks[taskId].func = PssScrollRightEnd;
 }
@@ -2259,8 +2259,8 @@ static void PssScrollLeft(u8 taskId) // Scroll left
             data[1] = 1;
         ChangeBgX(data[1], 0x10000, BG_COORD_SET);
     }
-    ChangeBgX(data[1], 0x2000, BG_COORD_SUB);
-    data[0] += 32;
+    ChangeBgX(data[1], 0x4000, BG_COORD_SUB);
+    data[0] += 64;
     if (data[0] > 0xFF)
         gTasks[taskId].func = PssScrollLeftEnd;
 }
@@ -3490,31 +3490,36 @@ static void PrintInfoPageText(void)
 static void Task_PrintInfoPage(u8 taskId)
 {
     s16 *data = gTasks[taskId].data;
-    switch (data[0])
+    u8 i;
+
+    for (i = 0; i < 2; i++) // run 2 states per frame to keep pace with the faster scroll
     {
-    case 1:
-        PrintMonOTName();
-        break;
-    case 2:
-        PrintMonOTID();
-        break;
-    case 3:
-        PrintMonAbilityName();
-        break;
-    case 4:
-        PrintMonAbilityDescription();
-        break;
-    case 5:
-        BufferMonTrainerMemo();
-        break;
-    case 6:
-        PrintMonTrainerMemo();
-        break;
-    case 7:
-        DestroyTask(taskId);
-        return;
+        switch (data[0])
+        {
+        case 1:
+            PrintMonOTName();
+            break;
+        case 2:
+            PrintMonOTID();
+            break;
+        case 3:
+            PrintMonAbilityName();
+            break;
+        case 4:
+            PrintMonAbilityDescription();
+            break;
+        case 5:
+            BufferMonTrainerMemo();
+            break;
+        case 6:
+            PrintMonTrainerMemo();
+            break;
+        case 7:
+            DestroyTask(taskId);
+            return;
+        }
+        data[0]++;
     }
-    data[0]++;
 }
 
 static void PrintMonOTName(void)
@@ -3764,38 +3769,42 @@ static void PrintSkillsPageText(void)
 static void Task_PrintSkillsPage(u8 taskId)
 {
     s16 *data = gTasks[taskId].data;
+    u8 i;
 
-    switch (data[0])
+    for (i = 0; i < 2; i++) // run 2 states per frame to keep pace with the faster scroll
     {
-    case 1:
-        PrintHeldItemName();
-        break;
-    case 2:
-        PrintRibbonCount();
-        break;
-    case 3:
-        ChangeStatLabel(SUMMARY_SKILLS_MODE_STATS);
-        break;
-    case 4:
-        BufferLeftColumnStats();
-        break;
-    case 5:
-        PrintLeftColumnStats();
-        break;
-    case 6:
-        BufferRightColumnStats();
-        break;
-    case 7:
-        PrintRightColumnStats();
-        break;
-    case 8:
-        PrintExpPointsNextLevel();
-        break;
-    case 9:
-        DestroyTask(taskId);
-        return;
+        switch (data[0])
+        {
+        case 1:
+            PrintHeldItemName();
+            break;
+        case 2:
+            PrintRibbonCount();
+            break;
+        case 3:
+            ChangeStatLabel(SUMMARY_SKILLS_MODE_STATS);
+            break;
+        case 4:
+            BufferLeftColumnStats();
+            break;
+        case 5:
+            PrintLeftColumnStats();
+            break;
+        case 6:
+            BufferRightColumnStats();
+            break;
+        case 7:
+            PrintRightColumnStats();
+            break;
+        case 8:
+            PrintExpPointsNextLevel();
+            break;
+        case 9:
+            DestroyTask(taskId);
+            return;
+        }
+        data[0]++;
     }
-    data[0]++;
 }
 
 static void PrintHeldItemName(void)
@@ -4014,46 +4023,50 @@ static void PrintBattleMoves(void)
 static void Task_PrintBattleMoves(u8 taskId)
 {
     s16 *data = gTasks[taskId].data;
+    u8 i;
 
-    switch (data[0])
+    for (i = 0; i < 2; i++) // run 2 states per frame to keep pace with the faster scroll
     {
-    case 1:
-        PrintMoveNameAndPP(0);
-        break;
-    case 2:
-        PrintMoveNameAndPP(1);
-        break;
-    case 3:
-        PrintMoveNameAndPP(2);
-        break;
-    case 4:
-        PrintMoveNameAndPP(3);
-        break;
-    case 5:
-        if (sMonSummaryScreen->mode == SUMMARY_MODE_SELECT_MOVE)
-            PrintNewMoveDetailsOrCancelText();
-        break;
-    case 6:
-        if (sMonSummaryScreen->mode == SUMMARY_MODE_SELECT_MOVE)
+        switch (data[0])
         {
-            if (sMonSummaryScreen->firstMoveIndex == MAX_MON_MOVES)
-                data[1] = sMonSummaryScreen->newMove;
-            else
-                data[1] = sMonSummaryScreen->summary.moves[sMonSummaryScreen->firstMoveIndex];
+        case 1:
+            PrintMoveNameAndPP(0);
+            break;
+        case 2:
+            PrintMoveNameAndPP(1);
+            break;
+        case 3:
+            PrintMoveNameAndPP(2);
+            break;
+        case 4:
+            PrintMoveNameAndPP(3);
+            break;
+        case 5:
+            if (sMonSummaryScreen->mode == SUMMARY_MODE_SELECT_MOVE)
+                PrintNewMoveDetailsOrCancelText();
+            break;
+        case 6:
+            if (sMonSummaryScreen->mode == SUMMARY_MODE_SELECT_MOVE)
+            {
+                if (sMonSummaryScreen->firstMoveIndex == MAX_MON_MOVES)
+                    data[1] = sMonSummaryScreen->newMove;
+                else
+                    data[1] = sMonSummaryScreen->summary.moves[sMonSummaryScreen->firstMoveIndex];
+            }
+            break;
+        case 7:
+            if (sMonSummaryScreen->mode == SUMMARY_MODE_SELECT_MOVE)
+            {
+                if (sMonSummaryScreen->newMove != MOVE_NONE || sMonSummaryScreen->firstMoveIndex != MAX_MON_MOVES)
+                    PrintMoveDetails(data[1]);
+            }
+            break;
+        case 8:
+            DestroyTask(taskId);
+            return;
         }
-        break;
-    case 7:
-        if (sMonSummaryScreen->mode == SUMMARY_MODE_SELECT_MOVE)
-        {
-            if (sMonSummaryScreen->newMove != MOVE_NONE || sMonSummaryScreen->firstMoveIndex != MAX_MON_MOVES)
-                PrintMoveDetails(data[1]);
-        }
-        break;
-    case 8:
-        DestroyTask(taskId);
-        return;
+        data[0]++;
     }
-    data[0]++;
 }
 
 static void PrintMoveNameAndPP(u8 moveIndex)
@@ -4143,37 +4156,41 @@ static void PrintContestMoves(void)
 static void Task_PrintContestMoves(u8 taskId)
 {
     s16 *data = gTasks[taskId].data;
+    u8 i;
 
-    switch (data[0])
+    for (i = 0; i < 2; i++) // run 2 states per frame to keep pace with the faster scroll
     {
-    case 1:
-        PrintMoveNameAndPP(0);
-        break;
-    case 2:
-        PrintMoveNameAndPP(1);
-        break;
-    case 3:
-        PrintMoveNameAndPP(2);
-        break;
-    case 4:
-        PrintMoveNameAndPP(3);
-        break;
-    case 5:
-        if (sMonSummaryScreen->mode == SUMMARY_MODE_SELECT_MOVE)
-            PrintNewMoveDetailsOrCancelText();
-        break;
-    case 6:
-        if (sMonSummaryScreen->mode == SUMMARY_MODE_SELECT_MOVE)
+        switch (data[0])
         {
-            if (sMonSummaryScreen->newMove != MOVE_NONE || sMonSummaryScreen->firstMoveIndex != MAX_MON_MOVES)
-                PrintContestMoveDescription(sMonSummaryScreen->firstMoveIndex);
+        case 1:
+            PrintMoveNameAndPP(0);
+            break;
+        case 2:
+            PrintMoveNameAndPP(1);
+            break;
+        case 3:
+            PrintMoveNameAndPP(2);
+            break;
+        case 4:
+            PrintMoveNameAndPP(3);
+            break;
+        case 5:
+            if (sMonSummaryScreen->mode == SUMMARY_MODE_SELECT_MOVE)
+                PrintNewMoveDetailsOrCancelText();
+            break;
+        case 6:
+            if (sMonSummaryScreen->mode == SUMMARY_MODE_SELECT_MOVE)
+            {
+                if (sMonSummaryScreen->newMove != MOVE_NONE || sMonSummaryScreen->firstMoveIndex != MAX_MON_MOVES)
+                    PrintContestMoveDescription(sMonSummaryScreen->firstMoveIndex);
+            }
+            break;
+        case 7:
+            DestroyTask(taskId);
+            return;
         }
-        break;
-    case 7:
-        DestroyTask(taskId);
-        return;
+        data[0]++;
     }
-    data[0]++;
 }
 
 static void PrintContestMoveDescription(u8 moveSlot)

@@ -48,9 +48,9 @@ static u32 CalculateFishingTimeOfDayBoost(void);
 #define FISHING_GEN3_STICKY_CHANCE 85  //Active if config I_FISHING_STICKY_BOOST is set to GEN_3 or lower
 
 #if I_FISHING_BITE_ODDS >= GEN_4
-    #define FISHING_OLD_ROD_ODDS 25
-    #define FISHING_GOOD_ROD_ODDS 50
-    #define FISHING_SUPER_ROD_ODDS 75
+    #define FISHING_OLD_ROD_ODDS 100
+    #define FISHING_GOOD_ROD_ODDS 100
+    #define FISHING_SUPER_ROD_ODDS 100
 #elif I_FISHING_BITE_ODDS >= GEN_3
     #define FISHING_OLD_ROD_ODDS 50
     #define FISHING_GOOD_ROD_ODDS 50
@@ -198,19 +198,14 @@ static bool32 Fishing_WaitBeforeDots(struct Task *task)
 
 static bool32 Fishing_InitDots(struct Task *task)
 {
-    u32 randVal;
-
     LoadMessageBoxAndFrameGfx(0, TRUE);
-    task->tStep = FISHING_SHOW_DOTS;
     task->tFrameCounter = 0;
     task->tNumDots = 0;
-    randVal = Random();
-    randVal %= 10;
-    task->tDotsRequired = randVal + 1;
-    if (task->tRoundsPlayed == 0)
-        task->tDotsRequired = randVal + 4;
-    if (task->tDotsRequired >= 10)
-        task->tDotsRequired = 10;
+    task->tDotsRequired = 0;
+    task->tStep = FISHING_CHECK_FOR_BITE;
+    if (task->tRoundsPlayed != 0)
+        task->tStep = FISHING_GOT_BITE;
+    task->tRoundsPlayed++;
     return TRUE;
 }
 
@@ -286,7 +281,7 @@ static bool32 Fishing_CheckForBite(struct Task *task)
 static bool32 Fishing_GotBite(struct Task *task)
 {
     AlignFishingAnimationFrames();
-    AddTextPrinterParameterized(0, FONT_NORMAL, sText_OhABite, 0, 17, 0, NULL);
+    AddTextPrinterParameterized(0, FONT_NORMAL, sText_OhABite, 0, 1, 0, NULL);
     task->tStep = FISHING_CHANGE_MINIGAME;
     task->tFrameCounter = 0;
     return FALSE;
@@ -308,20 +303,12 @@ static bool32 Fishing_ChangeMinigame(struct Task *task)
     return TRUE;
 }
 
-// We have a bite. Now, wait for the player to press A, or the timer to expire.
+// We have a bite. Now, wait for the player to press A.
 static bool32 Fishing_WaitForA(struct Task *task)
 {
-    const s16 reelTimeouts[3] = {
-        [OLD_ROD]   = 36,
-        [GOOD_ROD]  = 33,
-        [SUPER_ROD] = 30
-    };
-
     AlignFishingAnimationFrames();
     task->tFrameCounter++;
-    if (task->tFrameCounter >= reelTimeouts[task->tFishingRod])
-        task->tStep = FISHING_GOT_AWAY;
-    else if (JOY_NEW(A_BUTTON))
+    if (JOY_NEW(A_BUTTON))
         task->tStep = FISHING_CHECK_MORE_DOTS;
     return FALSE;
 }
@@ -364,8 +351,6 @@ static bool32 Fishing_CheckMoreDots(struct Task *task)
 static bool32 Fishing_MonOnHook(struct Task *task)
 {
     AlignFishingAnimationFrames();
-    FillWindowPixelBuffer(0, PIXEL_FILL(1));
-    AddTextPrinterParameterized2(0, FONT_NORMAL, sText_PokemonOnHook, 1, 0, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRAY);
     task->tStep = FISHING_START_ENCOUNTER;
     task->tFrameCounter = 0;
     return FALSE;

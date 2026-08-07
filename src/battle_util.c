@@ -484,6 +484,8 @@ void HandleAction_UseMove(void)
     {
         gBattleStruct->battlerState[battler].wasAboveHalfHp = gBattleMons[battler].hp > gBattleMons[battler].maxHP / 2;
         gBattleMons[battler].volatiles.activateDancer = FALSE;
+
+        gBattleStruct->battlerState[battler].wasAboveThirdHp = gBattleMons[battler].hp > gBattleMons[battler].maxHP / 3;
     }
 
     gCurrentActionFuncId = B_ACTION_EXEC_SCRIPT;
@@ -2135,6 +2137,13 @@ bool32 HadMoreThanHalfHpNowDoesnt(enum BattlerId battler)
         && gBattleMons[battler].hp <= gBattleMons[battler].maxHP / 2;
 }
 
+bool32 HadMoreThanThirdHpNowDoesnt(enum BattlerId battler)
+{
+    // Had more than a third of hp before, now has less (Blaze, Torrent, Overgrow, Swarm)
+    return gBattleStruct->battlerState[battler].wasAboveThirdHp
+        && gBattleMons[battler].hp <= gBattleMons[battler].maxHP / 3;
+}
+
 u32 NumFaintedBattlersByAttacker(enum BattlerId battlerAtk)
 {
     u32 numMonsFainted = 0;
@@ -3502,6 +3511,36 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                 effect++;
             }
             break;
+        
+        case ABILITY_BLAZE:
+        case ABILITY_TORRENT:
+        case ABILITY_OVERGROW:
+        case ABILITY_SWARM:
+            if (gBattleMons[battler].hp <= gBattleMons[battler].maxHP / 3)
+            {
+                enum Type boostedType;
+                switch (gLastUsedAbility)
+                {
+                case ABILITY_BLAZE:
+                    boostedType = TYPE_FIRE;
+                    break;
+                case ABILITY_TORRENT:
+                    boostedType = TYPE_WATER;
+                    break;
+                case ABILITY_OVERGROW:
+                    boostedType = TYPE_GRASS;
+                    break;
+                default: // ABILITY_SWARM
+                    boostedType = TYPE_BUG;
+                    break;
+                }
+                gEffectBattler = gBattlerAbility = battler;
+                PREPARE_TYPE_BUFFER(gBattleTextBuff1, boostedType);
+                BattleScriptCall(BattleScript_TypeBoostAbilityActivates);
+                effect++;
+            }
+            break;
+        
         default:
             break;
         }
@@ -3772,6 +3811,37 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                 effect++;
             }
             break;
+
+        case ABILITY_BLAZE:
+        case ABILITY_TORRENT:
+        case ABILITY_OVERGROW:
+        case ABILITY_SWARM:
+            if (IsBattlerTurnDamaged(battler, EXCLUDING_SUBSTITUTES)
+             && HadMoreThanThirdHpNowDoesnt(battler))
+            {
+                enum Type boostedType;
+                switch (gLastUsedAbility)
+                {
+                case ABILITY_BLAZE:
+                    boostedType = TYPE_FIRE;
+                    break;
+                case ABILITY_TORRENT:
+                    boostedType = TYPE_WATER;
+                    break;
+                case ABILITY_OVERGROW:
+                    boostedType = TYPE_GRASS;
+                    break;
+                default: // ABILITY_SWARM
+                    boostedType = TYPE_BUG;
+                    break;
+                }
+                gEffectBattler = gBattlerAbility = battler;
+                PREPARE_TYPE_BUFFER(gBattleTextBuff1, boostedType);
+                BattleScriptCall(BattleScript_TypeBoostAbilityActivates);
+                effect++;
+            }
+            break;
+
         default:
             break;
         }

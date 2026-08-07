@@ -4980,6 +4980,12 @@ BattleScript_ColorChangeActivates::
 	waitmessage B_WAIT_TIME_LONG
 	return
 
+BattleScript_TypeBoostAbilityActivates::
+	call BattleScript_AbilityPopUp
+	printstring STRINGID_PKMNTYPEMOVESBOOSTEDWITH
+	waitmessage B_WAIT_TIME_LONG
+	return
+	
 BattleScript_ProteanActivates::
 	pause B_WAIT_TIME_SHORTEST
 	call BattleScript_AbilityPopUp

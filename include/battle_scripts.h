@@ -183,6 +183,9 @@ extern const u8 BattleScript_OwnTempoPreventsRet[];
 extern const u8 BattleScript_StickyHoldActivates[];
 extern const u8 BattleScript_StickyHoldActivatesRet[];
 extern const u8 BattleScript_ColorChangeActivates[];
+
+extern const u8 BattleScript_TypeBoostAbilityActivates[];
+
 extern const u8 BattleScript_RoughSkinActivates[];
 extern const u8 BattleScript_CuteCharmActivates[];
 extern const u8 BattleScript_AbilityStatusEffect[];

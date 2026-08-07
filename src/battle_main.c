@@ -3224,6 +3224,9 @@ void SwitchInClearSetData(enum BattlerId battler, struct Volatiles *volatilesCop
     gBattleStruct->palaceFlags &= ~(1u << battler);
     gBattleStruct->battlerState[battler].canPickupItem = FALSE;
     gBattleStruct->battlerState[battler].wasAboveHalfHp = gBattleMons[battler].hp > gBattleMons[battler].maxHP / 2;
+
+    gBattleStruct->battlerState[battler].wasAboveThirdHp = gBattleMons[battler].hp > gBattleMons[battler].maxHP / 3;
+
     gBattleStruct->hazardsCounter = 0;
     gSpecialStatuses[battler].queuedSwitch = NO_QUEUED_SWITCH;
     gSpecialStatuses[battler].shellBellEmergencyExit = FALSE;
@@ -5053,6 +5056,9 @@ static void TurnValuesCleanUp(bool8 var0)
 
             gBattleStruct->battlerState[i].canPickupItem = FALSE;
             gBattleStruct->battlerState[i].wasAboveHalfHp = FALSE;
+
+            gBattleStruct->battlerState[i].wasAboveThirdHp = FALSE;
+            
         }
 
         if (gBattleMons[i].volatiles.substituteHP == 0)

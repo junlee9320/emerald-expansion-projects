@@ -1706,6 +1706,8 @@ static void Cmd_datahpupdate(void)
     }
     if (gBattleMons[battler].hp > gBattleMons[battler].maxHP / 2)
         gBattleStruct->battlerState[battler].wasAboveHalfHp = TRUE;
+    if (gBattleMons[battler].hp > gBattleMons[battler].maxHP / 3)
+        gBattleStruct->battlerState[battler].wasAboveThirdHp = TRUE;
 
 }
 

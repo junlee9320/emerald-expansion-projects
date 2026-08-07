@@ -75,6 +75,9 @@ static bool32 HandleEndTurnVarious(enum BattlerId battler)
             gBattleMons[i].volatiles.laserFocus = FALSE;
 
         gBattleStruct->battlerState[i].wasAboveHalfHp = gBattleMons[i].hp > gBattleMons[i].maxHP / 2;
+
+        gBattleStruct->battlerState[i].wasAboveThirdHp = gBattleMons[i].hp > gBattleMons[i].maxHP / 3;
+        
     }
 
     if (gBattleStruct->incrementEchoedVoice)
@@ -1645,6 +1648,8 @@ bool32 DoEndTurnEffects(void)
                 bool32 effect = HandleEndTurnEmergencyExit(battler);
 
                 gBattleStruct->battlerState[battler].wasAboveHalfHp = gBattleMons[battler].hp > gBattleMons[battler].maxHP / 2;
+
+                gBattleStruct->battlerState[battler].wasAboveThirdHp = gBattleMons[battler].hp > gBattleMons[battler].maxHP / 3;
 
                 if (effect)
                     return TRUE;

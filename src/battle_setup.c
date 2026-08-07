@@ -1,4 +1,5 @@
 #include "global.h"
+#include "pokemon.h"
 #include "battle.h"
 #include "load_save.h"
 #include "battle_setup.h"
@@ -958,13 +959,25 @@ void ChooseStarter(void)
     gMain.savedCallback = CB2_GiveStarter;
 }
 
+// Creates a mon with fully random IVs, then forces numPerfectIVs randomly-chosen stats to a perfect 31 IV.
+static void CreateStarterMonWithGuaranteedIVs(struct Pokemon *mon, enum Species species, u8 level, u32 numPerfectIVs)
+{
+    CreateMon(mon, species, level, Random32(), OTID_STRUCT_PLAYER_ID);
+    SetBoxMonIVs(&mon->box, USE_RANDOM_IVS); // start with fully random IVs
+    SetBoxMonPerfectIVs(&mon->box, numPerfectIVs); // force N randomly-chosen stats to a perfect IV
+    CalculateMonStats(mon); // compute actual stats (Max HP, Attack, etc.) and set current HP to full
+    GiveMonInitialMoveset(mon);
+}
+
 static void CB2_GiveStarter(void)
 {
     u16 starterMon;
+    struct Pokemon mon;
 
     *GetVarPointer(VAR_STARTER_MON) = gSpecialVar_Result;
     starterMon = GetStarterPokemon(gSpecialVar_Result);
-    ScriptGiveMon(starterMon, 5, ITEM_NONE);
+    CreateStarterMonWithGuaranteedIVs(&mon, starterMon, 5, 4);
+    GiveScriptedMonToPlayer(&mon, PARTY_SIZE);
     ResetTasks();
     PlayBattleBGM();
     SetMainCallback2(CB2_StartFirstBattle);

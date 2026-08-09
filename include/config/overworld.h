@@ -167,14 +167,14 @@
 
 // Which species performs each field move's animation when no real party member knows it (only relevant if
 // OW_FIELD_MOVES_NO_HM_REQUIRED is TRUE). Fully independent per move - set each to whatever species you like.
-#define FIELD_MOVE_MON_CUT              SPECIES_MEWTWO
-#define FIELD_MOVE_MON_FLASH            SPECIES_MEWTWO
-#define FIELD_MOVE_MON_ROCK_SMASH       SPECIES_MEWTWO
-#define FIELD_MOVE_MON_STRENGTH         SPECIES_MEWTWO
-#define FIELD_MOVE_MON_SURF             SPECIES_MEWTWO
-#define FIELD_MOVE_MON_WATERFALL        SPECIES_MEWTWO
-#define FIELD_MOVE_MON_DIVE             SPECIES_MEWTWO
-#define FIELD_MOVE_MON_ROCK_CLIMB       SPECIES_MEWTWO
-#define FIELD_MOVE_MON_FLY              SPECIES_MEWTWO
+#define FIELD_MOVE_MON_CUT              SPECIES_SNOM
+#define FIELD_MOVE_MON_FLASH            SPECIES_SNOM
+#define FIELD_MOVE_MON_ROCK_SMASH       SPECIES_SNOM
+#define FIELD_MOVE_MON_STRENGTH         SPECIES_SNOM
+#define FIELD_MOVE_MON_SURF             SPECIES_SNOM
+#define FIELD_MOVE_MON_WATERFALL        SPECIES_SNOM
+#define FIELD_MOVE_MON_DIVE             SPECIES_SNOM
+#define FIELD_MOVE_MON_ROCK_CLIMB       SPECIES_SNOM
+#define FIELD_MOVE_MON_FLY              SPECIES_SNOM
 
 #endif // GUARD_CONFIG_OVERWORLD_H

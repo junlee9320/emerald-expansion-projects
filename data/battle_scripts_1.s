@@ -228,6 +228,7 @@ BattleScript_DecreaseStatChangeMessage::
 	return
 
 BattleScript_DecreaseStatChangeMessageMinStat::
+	pause B_WAIT_TIME_SHORT
 	printfromtable gStatDownStringIds
 	waitmessage B_WAIT_TIME_LONG
 	return

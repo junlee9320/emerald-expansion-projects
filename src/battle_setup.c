@@ -962,9 +962,12 @@ void ChooseStarter(void)
 // Creates a mon with fully random IVs, then forces numPerfectIVs randomly-chosen stats to a perfect 31 IV.
 static void CreateStarterMonWithGuaranteedIVs(struct Pokemon *mon, enum Species species, u8 level, u32 numPerfectIVs)
 {
+    u8 metLocation = METLOC_FATEFUL_ENCOUNTER;
+
     CreateMon(mon, species, level, Random32(), OTID_STRUCT_PLAYER_ID);
     SetBoxMonIVs(&mon->box, USE_RANDOM_IVS); // start with fully random IVs
     SetBoxMonPerfectIVs(&mon->box, numPerfectIVs); // force N randomly-chosen stats to a perfect IV
+    SetMonData(mon, MON_DATA_MET_LOCATION, &metLocation); // show "Fateful encounter" in the summary screen memo
     CalculateMonStats(mon); // compute actual stats (Max HP, Attack, etc.) and set current HP to full
     GiveMonInitialMoveset(mon);
 }

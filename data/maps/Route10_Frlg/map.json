@@ -3,16 +3,11 @@
   "name": "Route10_Frlg",
   "layout": "LAYOUT_ROUTE10",
   "music": "MUS_RG_ROUTE3",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_ROUTE_10",
   "requires_flash": false,
   "weather": "WEATHER_SUNNY",
   "map_type": "MAP_TYPE_ROUTE",
-  "allow_cycling": true,
-  "allow_escaping": false,
-  "allow_running": true,
   "show_map_name": true,
-  "floor_number": 0,
   "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
   "connections": [
     {
@@ -28,7 +23,6 @@
   ],
   "object_events": [
     {
-      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_PICNICKER_FRLG",
       "x": 7,
       "y": 60,
@@ -42,7 +36,6 @@
       "flag": "0"
     },
     {
-      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_HIKER_FRLG",
       "x": 4,
       "y": 62,
@@ -56,7 +49,6 @@
       "flag": "0"
     },
     {
-      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_POKE_MANIAC_FRLG",
       "x": 15,
       "y": 70,
@@ -70,7 +62,6 @@
       "flag": "0"
     },
     {
-      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_HIKER_FRLG",
       "x": 4,
       "y": 68,
@@ -84,7 +75,6 @@
       "flag": "0"
     },
     {
-      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_POKE_MANIAC_FRLG",
       "x": 13,
       "y": 44,
@@ -98,7 +88,6 @@
       "flag": "0"
     },
     {
-      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_PICNICKER_FRLG",
       "x": 9,
       "y": 27,
@@ -112,7 +101,6 @@
       "flag": "0"
     },
     {
-      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_CUTTABLE_TREE_FRLG",
       "x": 10,
       "y": 20,
@@ -126,7 +114,6 @@
       "flag": "FLAG_TEMP_12"
     },
     {
-      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_CUTTABLE_TREE_FRLG",
       "x": 10,
       "y": 22,
@@ -140,7 +127,6 @@
       "flag": "FLAG_TEMP_13"
     },
     {
-      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_CUTTABLE_TREE_FRLG",
       "x": 10,
       "y": 24,
@@ -154,7 +140,6 @@
       "flag": "FLAG_TEMP_14"
     },
     {
-      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_CUTTABLE_TREE_FRLG",
       "x": 10,
       "y": 26,
@@ -205,9 +190,7 @@
       "dest_warp_id": "3"
     }
   ],
-  "coord_events": [
-
-  ],
+  "coord_events": [],
   "bg_events": [
     {
       "type": "sign",
@@ -283,5 +266,10 @@
       "quantity": 1,
       "underfoot": false
     }
-  ]
+  ],
+  "allow_cycling": true,
+  "allow_escaping": false,
+  "allow_running": true,
+  "floor_number": 0,
+  "region": "REGION_KANTO"
 }

@@ -71,7 +71,7 @@ LittlerootTown_EventScript_SetExitedHouseAfterLatiSSTicketEvent::
 	return
 
 LittlerootTown_EventScript_MoveMomToMaysDoor::
-	setobjectxyperm LOCALID_LITTLEROOT_MOM, 14, 8
+	setobjectxyperm LOCALID_LITTLEROOT_MOM, 32, 8
 	return
 
 LittlerootTown_EventScript_SetTwinPos::
@@ -94,11 +94,11 @@ LittlerootTown_EventScript_SetMomStandingInFrontOfDoorPos::
 	return
 
 LittlerootTown_EventScript_SetMomInFrontOfDoorMale::
-	setobjectxyperm LOCALID_LITTLEROOT_MOM, 5, 9
+	setobjectxyperm LOCALID_LITTLEROOT_MOM, 20, 9
 	return
 
 LittlerootTown_EventScript_SetMomInFrontOfDoorFemale::
-	setobjectxyperm LOCALID_LITTLEROOT_MOM, 14, 9
+	setobjectxyperm LOCALID_LITTLEROOT_MOM, 31, 9
 	return
 
 LittlerootTown_OnFrame:
@@ -109,7 +109,7 @@ LittlerootTown_OnFrame:
 
 LittlerootTown_EventScript_StepOffTruckMale::
 	lockall
-	setvar VAR_0x8004, 5
+	setvar VAR_0x8004, 32
 	setvar VAR_0x8005, 8
 	call LittlerootTown_EventScript_GoInsideWithMom
 	setflag FLAG_HIDE_LITTLEROOT_TOWN_BRENDANS_HOUSE_TRUCK
@@ -120,7 +120,7 @@ LittlerootTown_EventScript_StepOffTruckMale::
 
 LittlerootTown_EventScript_StepOffTruckFemale::
 	lockall
-	setvar VAR_0x8004, 14
+	setvar VAR_0x8004, 21
 	setvar VAR_0x8005, 8
 	call LittlerootTown_EventScript_GoInsideWithMom
 	setflag FLAG_HIDE_LITTLEROOT_TOWN_MAYS_HOUSE_TRUCK

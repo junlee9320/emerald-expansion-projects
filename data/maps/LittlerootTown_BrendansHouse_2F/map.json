@@ -3,14 +3,10 @@
   "name": "LittlerootTown_BrendansHouse_2F",
   "layout": "LAYOUT_LITTLEROOT_TOWN_BRENDANS_HOUSE_2F",
   "music": "MUS_LITTLEROOT",
-  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_LITTLEROOT_TOWN",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
   "map_type": "MAP_TYPE_INDOOR",
-  "allow_cycling": false,
-  "allow_escaping": false,
-  "allow_running": false,
   "show_map_name": false,
   "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
   "connections": null,
@@ -269,5 +265,9 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "PlayersHouse_2F_EventScript_GameCube"
     }
-  ]
+  ],
+  "allow_cycling": false,
+  "allow_escaping": false,
+  "allow_running": false,
+  "region": "REGION_HOENN"
 }
